@@ -32,7 +32,8 @@ btn.addEventListener('click', () => {
         .then(imageUrls => {
             output.innerHTML = '';
             imageUrls.map(imageObj => {
-                const imageUrl = imageObj.url;
+                const imageUrl = imageObj.url.split("?")[0];
+                console.log(imageUrl);
                 output.innerHTML += `
                 <img src='${imageUrl}' alt='image loading...'>
                 `;
