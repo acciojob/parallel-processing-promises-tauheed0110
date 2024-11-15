@@ -18,7 +18,7 @@ function fetchImage(url) {
                 throw new Error(`Failed to load image's URL: ${url}`);
             }
             return new Promise((resolve, reject)=>{
-                resolve(response);
+                resolve(url);
             })
         });
 }
@@ -31,11 +31,9 @@ btn.addEventListener('click', () => {
     Promise.all(imagePromises)
         .then(imageUrls => {
             output.innerHTML = '';
-            imageUrls.map(imageObj => {
-                const imageUrl = imageObj.url.split("?")[0];
-                console.log(imageUrl);
+            imageUrls.map(url => {
                 output.innerHTML += `
-                <img src='${imageUrl}' alt='image loading...'>
+                <img src='${url}' alt='image loading...'>
                 `;
             })
         })
