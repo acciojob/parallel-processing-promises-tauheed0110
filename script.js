@@ -17,29 +17,26 @@ function fetchImage(url) {
             if (!response.ok) {
                 throw new Error(`Failed to load image's URL: ${url}`);
             }
-            return response.blob(); // Get the image as a Blob object
+            return new Promise((resolve, reject)=>{
+                resolve(response);
+            })
         });
 }
 
 // Create an array of promises to fetch all images
 let imagePromises = [];
 btn.addEventListener('click', () => {
-    imagePromises = images.map(obj => {
-        return fetchImage(obj.url);
-    });
+    imagePromises = images.map(obj => fetchImage(obj.url));
     // Use Promise.all to handle all promises
     Promise.all(imagePromises)
-        .then(imageBlobs => {
-            // imageBlobs is an array of Blob objects for each image
-            output.textContent = '';
-            imageBlobs.forEach((blob, index) => {
-                // Create an Object URL for each image Blob and display it
-                const imgUrl = URL.createObjectURL(blob);
-                const imgElement = document.createElement('img');
-                imgElement.src = imgUrl;
-                output.appendChild(imgElement);
-                console.log(`Image ${index + 1} loaded successfully.`);
-            });
+        .then(imageUrls => {
+            output.innerHTML = '';
+            imageUrls.map(imageObj => {
+                const imageUrl = imageObj.url;
+                output.innerHTML += `
+                <img src='${imageUrl}' alt='image loading...'>
+                `;
+            })
         })
         .catch(error => {
             console.error('Error loading images:', error);
